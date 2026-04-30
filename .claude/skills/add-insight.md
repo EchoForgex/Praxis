@@ -1,6 +1,6 @@
 ---
 name: add-insight
-description: Capture a new insight into the DevelopmentGuide system. Accepts a URL, pasted text, or verbal description. Creates a raw insight file and drafts a structured rule for review.
+description: Capture a new insight into the DevelopmentGuide system. Accepts a URL, pasted text, local file path, PDF, or verbal description. Creates a raw insight file and drafts a structured rule for review.
 ---
 
 # add-insight
@@ -11,12 +11,14 @@ Capture an insight into `insights/` and draft a corresponding rule in `rules/`.
 
 Examine what the user provided:
 - **URL**: a link to a web page, GitHub repo, YouTube video, or social post
+- **Local file path**: an absolute or relative path to a file on disk (`.md`, `.txt`, `.pdf`, code files, etc.)
+- **PDF**: a path to a PDF file (may be the same as a local file path — detected by `.pdf` extension)
 - **Pasted text**: raw content copied from an article, post, or document
 - **Verbal**: the user described something in their own words
 
-## Step 2 — Fetch content (URL only)
+## Step 2 — Fetch content (URL and local files)
 
-Use WebFetch based on the domain:
+**For URLs** — use WebFetch based on the domain:
 
 | Domain | Fetch strategy |
 |--------|---------------|
@@ -25,6 +27,15 @@ Use WebFetch based on the domain:
 | `linkedin.com`, `twitter.com`, `x.com` | Fetch the URL. Note: these platforms often restrict unauthenticated content — save whatever is available and note the limitation in the insight file. |
 | `reddit.com` | Fetch the post page; extract post body and visible top-level comments. |
 | All other URLs | Standard WebFetch of the page content. |
+
+**For local files** — use the Read tool:
+
+| File type | Read strategy |
+|-----------|--------------|
+| `.pdf` | Use Read with the `pages` parameter if large (>10 pages). Extract key sections — skip front matter, tables of contents, and indexes unless they contain substance. |
+| `.md`, `.txt` | Read the full file. |
+| Code files (`.py`, `.ts`, `.go`, etc.) | Read the file; focus on comments, docstrings, and structural patterns rather than implementation details. |
+| Large files (>500 lines) | Read in relevant sections — ask the user which part contains the insight if unclear. |
 
 ## Step 3 — Determine source_project
 
@@ -42,7 +53,7 @@ Frontmatter:
 ---
 date: YYYY-MM-DD
 source: <URL | "paste" | "verbal">
-source_type: <web | github | youtube | social-linkedin | social-twitter | social-reddit | paste | verbal>
+source_type: <web | github | youtube | social-linkedin | social-twitter | social-reddit | pdf | local-file | paste | verbal>
 source_project: <project name or "none">
 status: raw
 tags: []

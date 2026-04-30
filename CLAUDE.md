@@ -38,7 +38,7 @@ Use `/add-insight` to capture anything worth keeping — paste text, give a URL 
 ---
 date: YYYY-MM-DD
 source: <URL | "paste" | "verbal">
-source_type: web | github | youtube | social-linkedin | social-twitter | social-reddit | paste | verbal
+source_type: web | github | youtube | social-linkedin | social-twitter | social-reddit | pdf | local-file | paste | verbal
 source_project: <project name or "none">
 status: raw
 tags: []
