@@ -93,9 +93,14 @@ Update both files with confirmed values. In the insight file, advance:
 status: raw → refined
 ```
 
-## Step 6 — Report
+## Step 6 — Update index
+
+Invoke `/update-index` to rebuild `rules/index.md` with the newly refined rule included. This makes the rule immediately available to `/discover-rules`.
+
+## Step 7 — Report
 
 After each file pair is refined:
 - Confirm paths updated and new status
+- Confirm index was updated and the rule is now discoverable
 - Note any fields still left incomplete that need domain knowledge to fill (flag but don't block)
 - If more `status: raw` files remain in the queue, ask whether to continue to the next one

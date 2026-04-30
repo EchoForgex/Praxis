@@ -57,8 +57,24 @@ source_project: <project name or "none">
 ```
 
 **Directory roles:**
-- `.claude/skills/` — active project-level skills (usable now via the `Skill` tool)
+- `.claude/skills/` — skills under development; designed for `~/.claude/skills/` from day one
 - `skills/` — content staged for promotion to user-level (`~/.claude/skills/`)
+- `rules/index.md` — auto-generated index of all `status: refined` rules; do not edit by hand
+
+### Dynamic rule discovery
+
+Projects do not embed rules in their CLAUDE.md. Instead, add one line:
+```
+Before starting any task with 3+ steps, invoke /discover-rules with a brief task description.
+```
+
+`/discover-rules` reads `~/.claude/development-guide/config.md` for the library path, loads `rules/index.md` in a single read, matches against task context, then fetches only the relevant rule bodies.
+
+### User-level promotion
+
+All skills reference `~/.claude/development-guide/config.md` for the library path, so they work identically after promotion. To promote:
+1. Copy `.claude/skills/*.md` → `~/.claude/skills/`
+2. Ensure `~/.claude/development-guide/config.md` exists with the correct `library_path:`
 
 ### Promoting to user-level
 

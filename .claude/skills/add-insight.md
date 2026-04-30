@@ -83,7 +83,11 @@ Body: distill the insight into a concise, actionable rule. One short paragraph. 
 
 If `applies_when` is not clear from the content, leave it as `[]` and flag it in your report.
 
-## Step 6 — Report
+## Step 6 — Update index
+
+Invoke `/update-index` to rebuild `rules/index.md`. The new rule will be excluded until it is refined, but this keeps the index consistent.
+
+## Step 7 — Report
 
 Tell the user:
 - Paths of both files created
