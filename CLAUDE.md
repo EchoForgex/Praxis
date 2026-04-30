@@ -6,9 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Development Guide repository — a living collection of best practices, workflow rules, and reusable skills for Claude Code projects. Its goal is to capture developer insights (like CLAUDE.md rule sets, debugging strategies, verification standards) and make them selectively applicable across projects.
 
-**Current scope:** Project-level. Content here is developed and validated before being promoted to user-level (`~/.claude/`) commands and skills.
-
-**End goal:** A library of user-level skills and CLAUDE.md fragments that can be composed into any new or existing project's workflow.
+**End goal:** A library of user-level skills and a global `~/.claude/CLAUDE.md` instruction that activates rule discovery across all projects — no per-project changes required.
 
 ## Architecture Intent
 
@@ -25,7 +23,7 @@ Not every rule applies to every project. When adding content, annotate it with t
 - team size or solo
 - maturity stage (greenfield, legacy refactor, hotfix)
 
-This annotation layer is what enables dynamic selection — a future tool or prompt can read the conditions and determine what to include in a given project's CLAUDE.md.
+This annotation layer is what enables dynamic selection — `/discover-rules` reads these conditions at task time and returns only what applies, without any per-project CLAUDE.md configuration.
 
 ## Working Conventions
 
@@ -63,22 +61,20 @@ source_project: <project name or "none">
 
 ### Dynamic rule discovery
 
-Projects do not embed rules in their CLAUDE.md. Instead, add one line:
+No per-project CLAUDE.md changes are needed. The bootstrap instruction lives once in `~/.claude/CLAUDE.md`:
 ```
 Before starting any task with 3+ steps, invoke /discover-rules with a brief task description.
 ```
 
-`/discover-rules` reads `~/.claude/development-guide/config.md` for the library path, loads `rules/index.md` in a single read, matches against task context, then fetches only the relevant rule bodies.
-
-### User-level promotion
-
-All skills reference `~/.claude/development-guide/config.md` for the library path, so they work identically after promotion. To promote:
-1. Copy `.claude/skills/*.md` → `~/.claude/skills/`
-2. Ensure `~/.claude/development-guide/config.md` exists with the correct `library_path:`
+This activates rule discovery globally. `/discover-rules` reads `~/.claude/development-guide/config.md` for the library path, loads `rules/index.md` in a single read, matches against task context, then fetches only the relevant rule bodies. Individual project CLAUDE.md files stay focused on project-specific context only.
 
 ### Promoting to user-level
 
-When a skill or rule has been validated in this project, promote it by copying to `~/.claude/skills/` (skills) or appending the relevant block to `~/.claude/CLAUDE.md` (global rules). Document the promotion in `CHANGELOG.md` with a rationale note.
+When skills are ready, promote them by:
+1. Copy `.claude/skills/*.md` → `~/.claude/skills/`
+2. Add the bootstrap instruction to `~/.claude/CLAUDE.md` (once, covers all projects)
+3. Ensure `~/.claude/development-guide/config.md` exists with the correct `library_path:`
+4. Document the promotion in `CHANGELOG.md`
 
 ### Task tracking
 
