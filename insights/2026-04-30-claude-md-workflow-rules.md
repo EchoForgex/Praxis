@@ -3,8 +3,8 @@ date: 2026-04-30
 source: paste
 source_type: paste
 source_project: seed
-status: raw
-tags: [claude-code, workflow, planning, verification, debugging]
+status: refined
+tags: [claude-code, workflow, planning, verification, debugging, subagents]
 ---
 
 # Claude Code Workflow Rules (Seed Insight)

@@ -2,6 +2,7 @@
 name: autonomous-bug-fixing
 applies_when: [any, bug-reports, failing-tests, ci-failures]
 promotes_to: CLAUDE.md
+status: refined
 source_insight: insights/2026-04-30-claude-md-workflow-rules.md
 source_project: seed
 ---

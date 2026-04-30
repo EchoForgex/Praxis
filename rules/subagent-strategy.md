@@ -1,7 +1,8 @@
 ---
 name: subagent-strategy
-applies_when: [any, parallel-research, complex-problems]
+applies_when: [any, parallel-research, multi-step-tasks]
 promotes_to: CLAUDE.md
+status: refined
 source_insight: insights/2026-04-30-claude-md-workflow-rules.md
 source_project: seed
 ---

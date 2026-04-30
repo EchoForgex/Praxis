@@ -1,7 +1,8 @@
 ---
 name: demand-elegance
-applies_when: [non-trivial-changes]
+applies_when: [non-trivial-changes, active-development, refactor]
 promotes_to: CLAUDE.md
+status: refined
 source_insight: insights/2026-04-30-claude-md-workflow-rules.md
 source_project: seed
 ---
