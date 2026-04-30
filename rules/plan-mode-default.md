@@ -2,6 +2,8 @@
 name: plan-mode-default
 applies_when: [any, multi-step-tasks, architectural-decisions]
 promotes_to: CLAUDE.md
+source_insight: insights/2026-04-30-claude-md-workflow-rules.md
+source_project: seed
 ---
 
 # Plan Mode Default

@@ -31,18 +31,34 @@ This annotation layer is what enables dynamic selection — a future tool or pro
 
 ### Adding new content
 
-- Capture first in `insights/` as a raw note; refine later
-- Each refined rule lives in its own file under `rules/` with a frontmatter block:
+Use `/add-insight` to capture anything worth keeping — paste text, give a URL (web page, GitHub repo, YouTube, social post), or describe it verbally. The skill creates a raw insight file and drafts a structured rule for review.
 
-```markdown
+**Insight frontmatter** (`insights/YYYY-MM-DD-{slug}.md`):
+```yaml
 ---
-name: rule-name
-applies_when: [greenfield, solo, multi-step-tasks]
-promotes_to: CLAUDE.md | skill | both
+date: YYYY-MM-DD
+source: <URL | "paste" | "verbal">
+source_type: web | github | youtube | social-linkedin | social-twitter | social-reddit | paste | verbal
+source_project: <project name or "none">
+status: raw
+tags: []
 ---
 ```
 
-- Promoted skills go to `skills/` following the existing superpowers skill format (frontmatter + instruction body)
+**Rule frontmatter** (`rules/{slug}.md`):
+```yaml
+---
+name: rule-name
+applies_when: [condition1, condition2]
+promotes_to: CLAUDE.md | skill | both
+source_insight: insights/YYYY-MM-DD-{slug}.md
+source_project: <project name or "none">
+---
+```
+
+**Directory roles:**
+- `.claude/skills/` — active project-level skills (usable now via the `Skill` tool)
+- `skills/` — content staged for promotion to user-level (`~/.claude/skills/`)
 
 ### Promoting to user-level
 

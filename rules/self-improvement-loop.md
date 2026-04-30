@@ -2,6 +2,8 @@
 name: self-improvement-loop
 applies_when: [any]
 promotes_to: CLAUDE.md
+source_insight: insights/2026-04-30-claude-md-workflow-rules.md
+source_project: seed
 ---
 
 # Self-Improvement Loop
