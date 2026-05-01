@@ -9,7 +9,7 @@ Find and apply workflow rules relevant to the current task without requiring a p
 
 ## Step 1 — Resolve library path
 
-Read `~/.claude/development-guide/config.md`. Extract the value of `library_path:`.
+Read `~/.claude/praxis/config.md`. Extract the value of `library_path:`.
 
 ## Step 2 — Read the index
 

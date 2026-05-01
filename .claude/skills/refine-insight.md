@@ -93,6 +93,23 @@ Update both files with confirmed values. In the insight file, advance:
 status: raw → refined
 ```
 
+In the rule file, append a `changelog:` entry (create the field if absent):
+```yaml
+changelog:
+  - YYYY-MM-DD: initial refinement
+```
+Use today's date. If the rule body was rewritten, note it: `YYYY-MM-DD: initial refinement, body rewritten`.
+
+### Deprecating a rule
+
+To deprecate a rule instead of refining it, set `status: deprecated` in the rule file's frontmatter and append a changelog entry with the reason:
+```yaml
+status: deprecated
+changelog:
+  - YYYY-MM-DD: deprecated — <reason>
+```
+Run `/update-index` after deprecation. Deprecated rules are excluded from the index and will not be returned by `/discover-rules`.
+
 ## Step 6 — Update index
 
 Invoke `/update-index` to rebuild `rules/index.md` with the newly refined rule included. This makes the rule immediately available to `/discover-rules`.

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Purpose
 
-This is a Development Guide repository — a living collection of best practices, workflow rules, and reusable skills for Claude Code projects. Its goal is to capture developer insights (like CLAUDE.md rule sets, debugging strategies, verification standards) and make them selectively applicable across projects.
+**Praxis** is a personal rule library for Claude Code — a living collection of best practices, workflow rules, and reusable skills. It captures developer insights (CLAUDE.md rule sets, debugging strategies, verification standards) and makes them selectively applicable across projects via dynamic discovery.
 
 **End goal:** A library of user-level skills and a global `~/.claude/CLAUDE.md` instruction that activates rule discovery across all projects — no per-project changes required.
 
@@ -68,14 +68,14 @@ No per-project CLAUDE.md changes are needed. The bootstrap instruction lives onc
 Before starting any task with 3+ steps, invoke /discover-rules with a brief task description.
 ```
 
-This activates rule discovery globally. `/discover-rules` reads `~/.claude/development-guide/config.md` for the library path, loads `rules/index.md` in a single read, matches against task context, then fetches only the relevant rule bodies. Individual project CLAUDE.md files stay focused on project-specific context only.
+This activates rule discovery globally. `/discover-rules` reads `~/.claude/praxis/config.md` for the library path, loads `rules/index.md` in a single read, matches against task context, then fetches only the relevant rule bodies. Individual project CLAUDE.md files stay focused on project-specific context only.
 
 ### Promoting to user-level
 
 When skills are ready, promote them by:
 1. Copy `.claude/skills/*.md` → `~/.claude/skills/`
 2. Add the bootstrap instruction to `~/.claude/CLAUDE.md` (once, covers all projects)
-3. Ensure `~/.claude/development-guide/config.md` exists with the correct `library_path:`
+3. Ensure `~/.claude/praxis/config.md` exists with the correct `library_path:`
 4. Document the promotion in `CHANGELOG.md`
 
 ### Task tracking

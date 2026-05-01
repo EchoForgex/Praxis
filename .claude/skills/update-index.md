@@ -9,7 +9,7 @@ Rebuild the rule index so `/discover-rules` always reflects the current library 
 
 ## Step 1 — Resolve library path
 
-Read `~/.claude/development-guide/config.md`. Extract the value of `library_path:`. All subsequent paths are relative to this root.
+Read `~/.claude/praxis/config.md`. Extract the value of `library_path:`. All subsequent paths are relative to this root.
 
 ## Step 2 — Scan rule files
 
@@ -23,7 +23,7 @@ For each file:
    - If the rule file has a `status` field in its own frontmatter, use that
    - Otherwise, read the linked `source_insight` file and check its `status` field
    - If neither is present, treat as `raw`
-5. Include the rule only if status is `refined`
+5. Include the rule only if status is `refined`. Skip rules with status `raw` or `deprecated`.
 
 ## Step 3 — Write index
 
@@ -42,9 +42,9 @@ Rewrite `{library_path}/rules/index.md` with the full rebuilt table:
 
 ## Step 4 — Report
 
-State how many rules were scanned, how many were included (refined), and how many were skipped (raw). Example:
+State how many rules were scanned, how many were included (refined), and how many were skipped (raw or deprecated). Example:
 
 ```
-Index updated: 4 refined rules indexed, 2 skipped (raw).
+Index updated: 4 refined rules indexed, 1 skipped (raw), 1 skipped (deprecated).
 rules/index.md → 4 rows
 ```
