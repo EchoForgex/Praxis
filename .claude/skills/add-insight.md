@@ -1,24 +1,29 @@
 ---
 name: add-insight
-description: Capture a new insight into the DevelopmentGuide system. Accepts a URL, pasted text, local file path, PDF, or verbal description. Creates a raw insight file and drafts a structured rule for review.
+description: Capture a new insight into the DevelopmentGuide system. Accepts one or more sources (URLs, pasted text, local files, PDFs, or verbal descriptions). Creates a raw insight file and drafts one rule file per distinct actionable rule found.
 ---
 
 # add-insight
 
-Capture an insight into `insights/` and draft a corresponding rule in `rules/`.
+Capture an insight into `insights/` and draft one rule file per distinct actionable rule found in the content.
 
-## Step 1 — Identify input type
+## Step 1 — Identify all sources
 
-Examine what the user provided:
-- **URL**: a link to a web page, GitHub repo, YouTube video, or social post
+The user may provide one or more sources in a single invocation. Collect all of them before fetching anything.
+
+Each source is one of:
+- **URL**: a web page, GitHub repo, YouTube video, or social post
 - **Local file path**: an absolute or relative path to a file on disk (`.md`, `.txt`, `.pdf`, code files, etc.)
-- **PDF**: a path to a PDF file (may be the same as a local file path — detected by `.pdf` extension)
 - **Pasted text**: raw content copied from an article, post, or document
 - **Verbal**: the user described something in their own words
 
-## Step 2 — Fetch content (URL and local files)
+If multiple sources are provided, they are treated as co-sources of a single insight — all fetched and combined into one insight file.
 
-**For URLs** — use WebFetch based on the domain:
+## Step 2 — Fetch all sources
+
+Fetch every source before proceeding. For each:
+
+**URLs** — use WebFetch based on the domain:
 
 | Domain | Fetch strategy |
 |--------|---------------|
@@ -28,7 +33,7 @@ Examine what the user provided:
 | `reddit.com` | Fetch the post page; extract post body and visible top-level comments. |
 | All other URLs | Standard WebFetch of the page content. |
 
-**For local files** — use the Read tool:
+**Local files** — use the Read tool:
 
 | File type | Read strategy |
 |-----------|--------------|
@@ -43,53 +48,72 @@ Ask the user which project this insight is associated with, OR infer it from the
 
 ## Step 4 — Create the insight file
 
+One insight file covers all co-sources.
+
 File path: `insights/YYYY-MM-DD-{slug}.md`
 
 - `YYYY-MM-DD`: today's date
-- `{slug}`: 2–5 word kebab-case summary of the topic
+- `{slug}`: 2–5 word kebab-case summary of the overall topic
 
 Frontmatter:
 ```yaml
 ---
 date: YYYY-MM-DD
-source: <URL | "paste" | "verbal">
-source_type: <web | github | youtube | social-linkedin | social-twitter | social-reddit | pdf | local-file | paste | verbal>
+sources:
+  - url: <URL | "paste" | "verbal">
+    type: <web | github | youtube | social-linkedin | social-twitter | social-reddit | pdf | local-file | paste | verbal>
 source_project: <project name or "none">
 status: raw
 tags: []
 ---
 ```
 
-Body: the raw content — full text, fetched page content, or the user's verbal description written out clearly.
+For a single source, `sources` is still a list with one entry. For multiple co-sources, list each with its own `url` and `type`.
 
-## Step 5 — Draft the rule file
+Body: the combined content from all sources — clearly labeled per source if multiple. Note any fetch limitations (e.g. auth wall on YouTube).
 
-File path: `rules/{slug}.md`
+## Step 5 — Identify distinct rules
 
-Use the same slug as the insight file.
+Before drafting, analyze the combined insight content and identify every distinct actionable rule it contains. A distinct rule is one that:
+- Addresses a different behavior, workflow, or decision pattern
+- Could stand alone without the others
+- Would have a different `applies_when` profile than its siblings
+
+There may be one rule or several. Do not force everything into one rule — capture the true granularity of the insight.
+
+List the rules you intend to draft and their proposed slugs before writing files. If a rule is unclear, note it.
+
+## Step 6 — Draft one rule file per distinct rule
+
+For each rule identified in Step 5, create a separate file.
+
+File path: `rules/{descriptive-slug}.md`
+
+Use a descriptive slug specific to that rule — not the insight slug. If two rules come from the same insight, they get different, meaningful names (e.g. `codex-rescue-subagent.md` and `codex-adversarial-review.md`).
 
 Frontmatter:
 ```yaml
 ---
-name: {slug}
+name: {descriptive-slug}
 applies_when: []
 promotes_to: CLAUDE.md
-source_insight: insights/YYYY-MM-DD-{slug}.md
+source_insight: insights/YYYY-MM-DD-{insight-slug}.md
 source_project: <project name or "none">
 ---
 ```
 
-Body: distill the insight into a concise, actionable rule. One short paragraph. Write it as a direct instruction (e.g. "When X, do Y. Reason: Z.").
+Body: one short paragraph. Direct instruction ("When X, do Y. Reason: Z."). Under 100 words.
 
-If `applies_when` is not clear from the content, leave it as `[]` and flag it in your report.
+If `applies_when` is not clear from the content, leave it as `[]` and flag it in the report.
 
-## Step 6 — Update index
+## Step 7 — Update index
 
-Invoke `/update-index` to rebuild `rules/index.md`. The new rule will be excluded until it is refined, but this keeps the index consistent.
+Invoke `/update-index` to rebuild `rules/index.md`. New rules will be excluded until refined, but this keeps the index consistent.
 
-## Step 7 — Report
+## Step 8 — Report
 
 Tell the user:
-- Paths of both files created
+- Path of the insight file created and how many sources it captured
+- List of all rule files drafted with a one-line summary of each
 - Any frontmatter fields left blank that need human review (especially `applies_when` and `tags`)
 - Any fetch limitations encountered (e.g. auth wall on social platforms)

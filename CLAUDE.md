@@ -35,13 +35,15 @@ Use `/add-insight` to capture anything worth keeping — paste text, give a URL 
 ```yaml
 ---
 date: YYYY-MM-DD
-source: <URL | "paste" | "verbal">
-source_type: web | github | youtube | social-linkedin | social-twitter | social-reddit | pdf | local-file | paste | verbal
+sources:
+  - url: <URL | "paste" | "verbal">
+    type: web | github | youtube | social-linkedin | social-twitter | social-reddit | pdf | local-file | paste | verbal
 source_project: <project name or "none">
 status: raw
 tags: []
 ---
 ```
+Multiple co-sources are listed as additional entries under `sources`. One insight file covers all of them.
 
 **Rule frontmatter** (`rules/{slug}.md`):
 ```yaml

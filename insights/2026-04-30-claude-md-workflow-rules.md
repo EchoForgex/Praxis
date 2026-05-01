@@ -1,7 +1,8 @@
 ---
 date: 2026-04-30
-source: paste
-source_type: paste
+sources:
+  - url: paste
+    type: paste
 source_project: seed
 status: refined
 tags: [claude-code, workflow, planning, verification, debugging, subagents]
