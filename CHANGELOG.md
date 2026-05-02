@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.1 — YouTube transcript support (2026-05-02)
+
+### Changed
+- `/add-insight`: YouTube URLs now use `yt-dlp` to download auto-generated VTT transcripts instead of WebFetch (which hits YouTube's auth wall). Falls back to WebFetch if `yt-dlp` is not installed.
+
+---
+
 ## v0.1 — Foundation (2026-05-01)
 
 First publishable release. Establishes the core capture-to-discovery pipeline and project identity.

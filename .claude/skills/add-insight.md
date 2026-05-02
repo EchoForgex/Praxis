@@ -28,7 +28,7 @@ Fetch every source before proceeding. For each:
 | Domain | Fetch strategy |
 |--------|---------------|
 | `github.com` | Fetch the repo root URL; extract README content. If a CLAUDE.md or docs/ directory is mentioned, fetch those too. |
-| `youtube.com` / `youtu.be` | Fetch the page; extract video title, description, and any auto-transcript content visible in the page source. |
+| `youtube.com` / `youtu.be` | Use `yt-dlp` to download the auto-generated transcript: `yt-dlp --write-auto-sub --sub-lang en --sub-format vtt --skip-download -o "/tmp/yt-%(id)s" <url>`. Then Read the resulting `/tmp/yt-<id>.en.vtt` file and strip VTT timestamp lines (lines matching `\d\d:\d\d` patterns) to get clean text. Also fetch the page URL with WebFetch to capture the title and description. If `yt-dlp` is not installed, fall back to WebFetch only and note the limitation. |
 | `linkedin.com`, `twitter.com`, `x.com` | Fetch the URL. Note: these platforms often restrict unauthenticated content — save whatever is available and note the limitation in the insight file. |
 | `reddit.com` | Fetch the post page; extract post body and visible top-level comments. |
 | All other URLs | Standard WebFetch of the page content. |
