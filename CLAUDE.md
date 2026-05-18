@@ -6,7 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Praxis** is a personal rule library for Claude Code — a living collection of best practices, workflow rules, and reusable skills. It captures developer insights (CLAUDE.md rule sets, debugging strategies, verification standards) and makes them selectively applicable across projects via dynamic discovery.
 
-**End goal:** A library of user-level skills and a global `~/.claude/CLAUDE.md` instruction that activates rule discovery across all projects — no per-project changes required.
+**End goal:** A library of user-level skills promoted to `~/.claude/skills/`, activated globally via the bootstrap instruction in `~/.claude/CLAUDE.md` — no per-project changes required.
+
+## Current Status
+
+6 seed rules in library. Bootstrap instruction is live in `~/.claude/CLAUDE.md`. Next: review seed rules for promotion to `~/.claude/skills/`.
 
 ## Architecture Intent
 
@@ -63,35 +67,63 @@ source_project: <project name or "none">
 
 ### Dynamic rule discovery
 
-No per-project CLAUDE.md changes are needed. The bootstrap instruction lives once in `~/.claude/CLAUDE.md`:
-```
-Before starting any task with 3+ steps, invoke /discover-rules with a brief task description.
-```
-
-This activates rule discovery globally. `/discover-rules` reads `~/.claude/praxis/config.md` for the library path, loads `rules/index.md` in a single read, matches against task context, then fetches only the relevant rule bodies. Individual project CLAUDE.md files stay focused on project-specific context only.
+`/discover-rules` reads `~/.claude/praxis/config.md` for the library path, loads `rules/index.md` in a single read, matches against task context, then fetches only the relevant rule bodies. The bootstrap instruction that activates this globally lives in `~/.claude/CLAUDE.md`.
 
 ### Promoting to user-level
 
 When skills are ready, promote them by:
 1. Copy `.claude/skills/*.md` → `~/.claude/skills/`
-2. Add the bootstrap instruction to `~/.claude/CLAUDE.md` (once, covers all projects)
-3. Ensure `~/.claude/praxis/config.md` exists with the correct `library_path:`
-4. Document the promotion in `CHANGELOG.md`
+2. Ensure `~/.claude/praxis/config.md` exists with the correct `library_path:`
+3. Document the promotion in `CHANGELOG.md`
 
 ### Task tracking
 
 - `tasks/todo.md` — current session work
-- `tasks/lessons.md` — cross-session memory; update after any correction or insight
+- `tasks/lessons.md` — local correction log; read this at session start for context on past corrections
 
-## The Six Core Rules (Seed Content)
+## HTTP Service (`service/`)
 
-These are the validated CLAUDE.md rules that seeded this project. They live here as the canonical reference:
+Praxis runs a FastAPI rules engine on **port 8004** alongside the file-based Claude Code library. The two systems are independent.
 
-| Rule | When it applies |
-|------|----------------|
-| **Plan Mode by default** | Any task with 3+ steps or an architectural decision |
-| **Subagent strategy** | Research, parallel analysis, or isolated execution tasks |
-| **Self-improvement loop** | Always — update `tasks/lessons.md` after every user correction |
-| **Verification before done** | Always — prove it works before marking complete |
-| **Demand elegance (balanced)** | Non-trivial changes; skip for obvious single-line fixes |
-| **Autonomous bug fixing** | Always — read logs and stack traces, resolve without asking back |
+### Service commands
+
+```bash
+cd service
+
+# Install deps
+poetry install
+
+# Dev server
+poetry run uvicorn main:app --reload --port 8004
+
+# Migrations
+poetry run alembic upgrade head
+poetry run alembic revision --autogenerate -m "<description>"
+```
+
+### Port assignments
+
+| Service | Port |
+|---------|------|
+| EchoForge OS | 8000 |
+| echoforge-agent | 8001 |
+| MemForge | 8002 |
+| echoforge-hub | 8003 |
+| **Praxis** | **8004** |
+
+### Environment
+
+`service/.env` holds `DATABASE_URL`, `PRAXIS_SERVICE_SECRET`, `PORT`, `LOG_LEVEL`.  
+OS accesses Praxis via `PRAXIS_BASE_URL` + `PRAXIS_SERVICE_TOKEN` (see `ProjectOS/.env`).
+
+## Cross-Project Notices
+
+Notices are centralized in `EchoForgeX_Arch/notices/`. This project's ID is `PR`.
+
+**At session start**, check for open notices:
+```bash
+grep -rl "to_id: PR" /Users/jeffreysinason/Development/EchoForgeX_Arch/notices/ 2>/dev/null | xargs grep -l "status: open" 2>/dev/null
+```
+Read and act on any files returned before starting work.
+
+**To file a notice**, write `NOTICE-{YYYY-MM-DD}-PR-{to_id}-{n}.md` in `/Users/jeffreysinason/Development/EchoForgeX_Arch/notices/` with standard front-matter (`from_id: PR`, `status: open`).
