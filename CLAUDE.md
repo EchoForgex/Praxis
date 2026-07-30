@@ -127,3 +127,22 @@ grep -rl "to_id: PR" /Users/jeffreysinason/Development/EchoForgeX_Arch/notices/ 
 Read and act on any files returned before starting work.
 
 **To file a notice**, write `NOTICE-{YYYY-MM-DD}-PR-{to_id}-{n}.md` in `/Users/jeffreysinason/Development/EchoForgeX_Arch/notices/` with standard front-matter (`from_id: PR`, `status: open`).
+
+## Requesting a Promote
+
+When a session is complete and new code is ready for staging:
+
+1. Get the current SHA: `git rev-parse --short HEAD`
+2. Send: `bridge-spawn POS "promote: service=praxis sha=<sha> env=staging"`
+
+**Multi-service ordered promote** (if a coupled service also needs promoting):
+
+    bridge-spawn POS "promote: services=praxis:<pr-sha>,os:<os-sha> env=staging"
+
+ProjectOS promotes left-to-right with a healthz gate between each. Upstream
+services go first in the list.
+
+Rules:
+- Always use an explicit SHA — never "latest" or a branch name
+- If the promote lock is held, ProjectOS will tell you to retry
+- Arch is notified of every promote result automatically
